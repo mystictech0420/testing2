@@ -1,0 +1,153 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Abstract class Stationery (already defined)
+abstract class Stationery {
+    protected String code;
+    protected String name;
+
+    public abstract void nhap(Scanner sc); // Abstract input method
+    public abstract void xuat();           // Abstract output method
+}
+
+// Notebook class inheriting from Stationery (already defined)
+class Notebook extends Stationery {
+    private int pageNumber;
+
+    public Notebook() {
+        this.pageNumber = 0;
+    }
+
+    @Override
+    public void nhap(Scanner sc) {
+        System.out.print("Enter notebook code: ");
+        code = sc.nextLine();
+        System.out.print("Enter notebook name: ");
+        name = sc.nextLine();
+        System.out.print("Enter number of pages: ");
+        pageNumber = sc.nextInt();
+        sc.nextLine(); // Consume newline character
+    }
+
+    @Override
+    public void xuat() {
+        System.out.println("Notebook Code: " + code);
+        System.out.println("Notebook Name: " + name);
+        System.out.println("Number of Pages: " + pageNumber);
+    }
+}
+
+// Pen class inheriting from Stationery (already defined)
+class Pen extends Stationery {
+    private String inkColor;
+
+    public Pen() {
+        this.inkColor = "";
+    }
+
+    @Override
+    public void nhap(Scanner sc) {
+        System.out.print("Enter pen code: ");
+        code = sc.nextLine();
+        System.out.print("Enter pen name: ");
+        name = sc.nextLine();
+        System.out.print("Enter ink color: ");
+        inkColor = sc.nextLine();
+    }
+
+    @Override
+    public void xuat() {
+        System.out.println("Pen Code: " + code);
+        System.out.println("Pen Name: " + name);
+        System.out.println("Ink Color: " + inkColor);
+    }
+}
+
+// StationeryList class
+class StationeryList {
+    // List to store stationery items
+    private ArrayList<Stationery> list;
+
+    // Constructor
+    public StationeryList() {
+        list = new ArrayList<>();
+    }
+
+    // Method to add stationery items (using polymorphism)
+    public void addStationery(Scanner sc) {
+        System.out.println("Select stationery type to add:");
+        System.out.println("1. Notebook");
+        System.out.println("2. Pen");
+        System.out.print("Enter your choice (1 or 2): ");
+        int choice = sc.nextInt();
+        sc.nextLine(); // Consume the remaining newline character
+
+        Stationery item;
+        if (choice == 1) {
+            item = new Notebook();  // Polymorphic assignment
+        } else if (choice == 2) {
+            item = new Pen();       // Polymorphic assignment
+        } else {
+            System.out.println("Invalid choice.");
+            return;
+        }
+
+        // Input details for the selected item
+        item.nhap(sc);
+
+        // Add the item to the list
+        list.add(item);
+        System.out.println("Item added to the stationery list.");
+    }
+
+    // Method to export the stationery list (output all items)
+    public void exportList() {
+        System.out.println("\n--- Stationery List ---");
+        for (Stationery item : list) {
+            item.xuat();
+            System.out.println();  // Add spacing between items
+        }
+    }
+
+    // Getter for the list size
+    public int getListSize() {
+        return list.size();
+    }
+}
+
+// Main class
+public class VPP {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Create an instance of StationeryList
+        StationeryList stationeryList = new StationeryList();
+
+        // Allow the user to add items to the list
+        int option;
+        do {
+            System.out.println("\n1. Add a stationery item");
+            System.out.println("2. Export stationery list");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            option = sc.nextInt();
+            sc.nextLine(); // Consume the remaining newline character
+
+            switch (option) {
+                case 1:
+                    stationeryList.addStationery(sc);
+                    break;
+                case 2:
+                    stationeryList.exportList();
+                    break;
+                case 3:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        } while (option != 3);
+
+        sc.close();
+    }
+}
